@@ -8,7 +8,7 @@ plugins {
 
 kotlin {
     androidTarget()
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -31,14 +31,6 @@ kotlin {
             implementation(project(":komposable-architecture-test"))
             implementation(libs.bundles.multiplatform.common.test)
         }
-//        jvmTest.dependencies {
-//            implementation(project(":komposable-architecture-test"))
-//            implementation(libs.junit.jupiter.api)
-//            runtimeOnly(libs.junit.jupiter.engine)
-//            implementation(libs.mockK)
-//
-//            implementation(libs.bundles.multiplatform.common.test)
-//        }
     }
 }
 
