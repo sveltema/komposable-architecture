@@ -1,43 +1,66 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.ksp)
 }
 
-extra.apply {
-    set("PUBLISH_GROUP_ID", "com.toggl")
-    set("PUBLISH_VERSION", "1.0.0-preview01")
-    set("PUBLISH_ARTIFACT_ID", "komposable-architecture")
-}
+kotlin {
+    androidTarget()
+    
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "komposable-architecture"
+            isStatic = true
+        }
+    }
 
-apply(from = "${rootProject.projectDir}/scripts/publish-module.gradle")
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlin.coroutines.core)
 
-
-java {
-    withJavadocJar()
-    withSourcesJar()
+            implementation(libs.turbine)
+            implementation(libs.kotestMatchers)
+        }
+        commonTest.dependencies {
+            implementation(project(":komposable-architecture-test"))
+            implementation(libs.bundles.multiplatform.common.test)
+        }
+//        jvmTest.dependencies {
+//            implementation(project(":komposable-architecture-test"))
+//            implementation(libs.junit.jupiter.api)
+//            runtimeOnly(libs.junit.jupiter.engine)
+//            implementation(libs.mockK)
+//
+//            implementation(libs.bundles.multiplatform.common.test)
+//        }
+    }
 }
 
 dependencies {
-    implementation(libs.kotlin.stdlib)
-    implementation(libs.kotlin.coroutines.core)
-
-    testImplementation(project(":komposable-architecture-test"))
-    testImplementation(libs.junit.jupiter.api)
-    testRuntimeOnly(libs.junit.jupiter.engine)
-    testImplementation(libs.mockK)
-    testImplementation(libs.turbine)
-    testImplementation(libs.kotestMatchers)
-
-    testImplementation(project(":komposable-architecture-test"))
-    testImplementation(libs.kotlin.stdlib)
-    testImplementation(libs.kotlin.test.core)
-    testImplementation(libs.kotlin.test.junit5)
-    testImplementation(libs.kotlinx.coroutines.test)
+    configurations
+        .filter { it.name.startsWith("ksp") && it.name.contains("Test") }
+        .forEach {
+            add(it.name, "io.mockative:mockative-processor:2.0.1")
+        }
 }
 
-tasks.withType<Test>().configureEach {
-    useJUnitPlatform()
+android {
+    namespace = "com.toggl.komposable"
+    compileSdk = 34
+    defaultConfig {
+        minSdk = 26
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
