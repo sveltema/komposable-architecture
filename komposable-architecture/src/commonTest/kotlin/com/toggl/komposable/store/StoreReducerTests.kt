@@ -21,6 +21,7 @@ class StoreReducerTests : StoreCoroutineTest() {
     fun `reducer should be called exactly once if one action is sent`() = runTest {
         testStore.send(TestAction.DoNothingAction)
         runCurrent()
+        assertTrue { testReducer.invocations.size == 1 }
         assertTrue {
             testReducer.invocations.map { it.second }.contains(TestAction.DoNothingAction)
         }
@@ -42,14 +43,13 @@ class StoreReducerTests : StoreCoroutineTest() {
             runCurrent()
 
             assertTrue {
-                testReducer.invocations.map { it.second }.containsAll(
-                    listOf(
-                        TestAction.DoNothingAction,
-                        startUselessEffectAction,
-                        TestAction.DoNothingAction,
-                        TestAction.DoNothingFromEffectAction,
-                    ),
-                )
+                testReducer.invocations.map { it.second } ==
+                        listOf(
+                            TestAction.DoNothingAction,
+                            startUselessEffectAction,
+                            TestAction.DoNothingAction,
+                            TestAction.DoNothingFromEffectAction,
+                        )
             }
         }
 
@@ -73,18 +73,17 @@ class StoreReducerTests : StoreCoroutineTest() {
         runCurrent()
 
         assertTrue {
-            testReducer.invocations.map { it.second }.containsAll(
-                listOf(
-                    // first: reduce sent actions
-                    TestAction.DoNothingAction,
-                    startFlowEffectAction,
+            testReducer.invocations.map { it.second } ==
+                    listOf(
+                        // first: reduce sent actions
+                        TestAction.DoNothingAction,
+                        startFlowEffectAction,
 
-                    // second: reduce action coming from effect
-                    TestAction.ClearTestPropertyFromEffect,
-                    TestAction.ChangeTestProperty("123"),
-                    TestAction.AddToTestProperty("4"),
-                ),
-            )
+                        // second: reduce action coming from effect
+                        TestAction.ClearTestPropertyFromEffect,
+                        TestAction.ChangeTestProperty("123"),
+                        TestAction.AddToTestProperty("4"),
+                    )
         }
     }
 }

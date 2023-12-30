@@ -25,10 +25,7 @@ abstract class BasePullbackTests {
         val globalState = TestState("", 1)
         val action = TestAction.LocalActionWrapper(LocalTestAction.ChangeTestIntProperty(2))
 
-        pulledBackReducer.testReduce(
-            globalState,
-            action,
-        ) { state, effect ->
+        pulledBackReducer.testReduce(globalState, action) { state, effect ->
             state shouldBe globalState.copy(testIntProperty = 2)
             effect shouldBe NoEffect
         }
@@ -43,10 +40,7 @@ abstract class BasePullbackTests {
             LocalTestAction.StartEffectAction(Effect.of(LocalTestAction.DoNothingFromEffectAction)),
         )
 
-        pulledBackReducer.testReduce(
-            globalState,
-            action,
-        ) { state, effect ->
+        pulledBackReducer.testReduce(globalState, action) { state, effect ->
             state shouldBe globalState
             effect.run().test {
                 awaitItem() shouldBe TestAction.LocalActionWrapper(LocalTestAction.DoNothingFromEffectAction)

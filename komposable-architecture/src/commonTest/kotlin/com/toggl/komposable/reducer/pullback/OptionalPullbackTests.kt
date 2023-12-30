@@ -30,10 +30,7 @@ class OptionalPullbackTests : BasePullbackTests() {
         val globalState = TestState("", 0) // 0 will cause the mapToLocalState to return null
         val action = TestAction.ChangeTestProperty("")
 
-        pulledBackReducer.testReduce(
-            globalState,
-            action,
-        ) { state, effect ->
+        pulledBackReducer.testReduce(globalState, action) { state, effect ->
             state shouldBe globalState
             effect shouldBe NoEffect
         }

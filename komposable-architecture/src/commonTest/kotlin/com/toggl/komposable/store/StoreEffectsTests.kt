@@ -17,14 +17,10 @@ class StoreEffectsTests : StoreCoroutineTest() {
     @Test
     fun `multiple effects can continue sending actions simultaneously`() = runTest {
         val effect1Flow = MutableStateFlow(TestAction.ChangeTestProperty("0"))
-        val effect1 = Effect {
-            effect1Flow
-        }
+        val effect1 = Effect { effect1Flow }
 
         val effect2Flow = MutableStateFlow(TestAction.ChangeTestProperty("10"))
-        val effect2 = Effect {
-            effect2Flow
-        }
+        val effect2 = Effect { effect2Flow }
 
         testStore.send(TestAction.StartEffectAction(effect1))
         runCurrent()
@@ -57,14 +53,12 @@ class StoreEffectsTests : StoreCoroutineTest() {
     @Test
     fun `effects are cancelled correctly in flight`() = runTest {
         val effect1Flow = MutableStateFlow(TestAction.ChangeTestProperty("0"))
-        val effect1 = Effect {
-            effect1Flow
-        }.cancellable("effect", cancelInFlight = false)
+        val effect1 = Effect { effect1Flow }
+            .cancellable("effect", cancelInFlight = false)
 
         val effect2Flow = MutableStateFlow(TestAction.ChangeTestProperty("10"))
-        val effect2 = Effect {
-            effect2Flow
-        }.cancellable("effect", cancelInFlight = true)
+        val effect2 = Effect { effect2Flow }
+            .cancellable("effect", cancelInFlight = true)
 
         testStore.send(TestAction.StartEffectAction(effect1))
         runCurrent()
@@ -90,15 +84,13 @@ class StoreEffectsTests : StoreCoroutineTest() {
     @Test
     fun `effects are cancelled correctly with cancel effect`() = runTest {
         val effect1Flow = MutableStateFlow(TestAction.ChangeTestProperty("0"))
-        val effect1 = Effect {
-            effect1Flow
-        }.cancellable("effect1", cancelInFlight = false)
+        val effect1 = Effect { effect1Flow }
+            .cancellable("effect1", cancelInFlight = false)
         val cancelEffect1 = Effect.cancel("effect1")
 
         val effect2Flow = MutableStateFlow(TestAction.ChangeTestProperty("10"))
-        val effect2 = Effect {
-            effect2Flow
-        }.cancellable("effect2", cancelInFlight = false)
+        val effect2 = Effect { effect2Flow }
+            .cancellable("effect2", cancelInFlight = false)
         val cancelEffect2 = Effect.cancel("effect2")
 
         testStore.send(TestAction.StartEffectAction(effect1))

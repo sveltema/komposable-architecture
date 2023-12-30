@@ -63,7 +63,6 @@ class TestSubscription : Subscription<TestState, TestAction> {
 }
 
 class TestExceptionSubscription : Subscription<TestState, TestAction> {
-    val stateFlow = MutableStateFlow<TestAction?>(null)
     override fun subscribe(state: Flow<TestState>): Flow<TestAction> = throw TestException
 }
 

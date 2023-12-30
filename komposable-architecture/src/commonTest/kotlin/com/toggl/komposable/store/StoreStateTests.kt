@@ -26,10 +26,7 @@ class StoreStateTests : StoreCoroutineTest() {
 
             // initial state
             awaitItem().testProperty shouldBe ""
-            // TestAction.DoNothingAction
-            // TestAction.ChangeTestProperty("123")
-            // TestAction.AddToTestProperty("4")
-            // TestAction.DoNothingAction
+            // updated state
             awaitItem().testProperty shouldBe "1234"
 
             cancelAndConsumeRemainingEvents()
@@ -51,10 +48,8 @@ class StoreStateTests : StoreCoroutineTest() {
 
             // initial state
             awaitItem().testProperty shouldBe ""
-            // TestAction.DoNothingAction
-            // TestAction.ChangeTestProperty("123")
-            // TestAction.ChangeTestProperty("")
             // we got back to the initial state, it doesn't make sense to emit anything
+            expectNoEvents()
 
             cancelAndConsumeRemainingEvents()
         }
@@ -76,14 +71,9 @@ class StoreStateTests : StoreCoroutineTest() {
 
             // initial state
             awaitItem().testProperty shouldBe ""
-            // TestAction.DoNothingAction
-            // TestAction.ChangeTestProperty("123")
-            // TestAction.AddToTestProperty("4")
-            // TestAction.StartEffectAction(TestEffect(TestAction.DoNothingFromEffectAction))
-            // TestAction.StartEffectAction(TestEffect(TestAction.ClearTestPropertyFromEffect))
+
             awaitItem().testProperty shouldBe "1234"
-            // From effect.execute() => TestAction.DoNothingFromEffectAction
-            // From effect.execute() => TestAction.ClearTestPropertyFromEffect
+
             awaitItem().testProperty shouldBe ""
 
             cancelAndConsumeRemainingEvents()

@@ -22,12 +22,11 @@ class StoreSubscriptionTests : StoreCoroutineTest() {
         runCurrent()
 
         assertTrue {
-            testReducer.invocations.map { it.second }.containsAll(
-                listOf(
-                    TestAction.DoNothingAction,
-                    TestAction.DoNothingFromEffectAction,
-                ),
-            )
+            testReducer.invocations.map { it.second } ==
+                    listOf(
+                        TestAction.DoNothingAction,
+                        TestAction.DoNothingFromEffectAction,
+                    )
         }
     }
 }

@@ -42,10 +42,7 @@ class ForEachMapTests {
         mapToElementAction = { action -> (action as? ParentAction.ElementActionWrapper)?.let { it.id to it.elementAction } },
         mapToElementMap = { state -> state.elements },
         mapToParentAction = { elementAction, id ->
-            ParentAction.ElementActionWrapper(
-                id,
-                elementAction,
-            )
+            ParentAction.ElementActionWrapper(id, elementAction)
         },
         mapToParentState = { state, elementMap -> state.copy(elements = elementMap) },
     )
@@ -56,9 +53,7 @@ class ForEachMapTests {
             initialParentState,
             ParentAction.EditText("updated"),
         ) { state ->
-            state shouldBe initialParentState.copy(
-                parentText = "updated",
-            )
+            state shouldBe initialParentState.copy(parentText = "updated")
         }
     }
 

@@ -15,7 +15,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Komposable_Architecture"
+rootProject.name = "TKA"
 
 include(
     ":komposable-architecture",
