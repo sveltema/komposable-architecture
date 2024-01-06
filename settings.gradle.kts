@@ -19,7 +19,9 @@ rootProject.name = "TKA"
 
 include(
     ":komposable-architecture",
-    ":komposable-architecture-test"
+    ":komposable-architecture-annotations",
+    ":komposable-architecture-test",
+    ":komposable-architecture-compiler"
 )
 
 //":komposable-architecture-compiler",
