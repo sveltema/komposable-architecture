@@ -21,8 +21,6 @@ include(
     ":komposable-architecture",
     ":komposable-architecture-annotations",
     ":komposable-architecture-test",
-    ":komposable-architecture-compiler"
+    ":komposable-architecture-compiler",
+    "samples:todos"
 )
-
-//":komposable-architecture-compiler",
-// "samples:todos"
