@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 internal class MutableStateFlowStore<State, Action : Any> private constructor(
     override val state: Flow<State>,
@@ -90,10 +89,11 @@ internal class MutableStateFlowStore<State, Action : Any> private constructor(
                     .onEach { action -> send(listOf(action)) }
                     .launchIn(storeScope)
             } catch (e: Throwable) {
-                runBlocking {
+                storeScope.launch {
                     exceptionHandler.handleSubscriptionException(e)
                 }
             }
+
             return MutableStateFlowStore(state, send)
         }
 
