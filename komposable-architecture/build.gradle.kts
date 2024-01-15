@@ -18,8 +18,8 @@ kotlin {
     watchosArm64()
     watchosX64()
     watchosSimulatorArm64()
-    watchosDeviceArm64()
-
+    // kotest support for Tier 3 KN targets is missing, expected in 5.9 release
+    // watchosDeviceArm64()
     tvosArm64()
     tvosX64()
     tvosSimulatorArm64()
