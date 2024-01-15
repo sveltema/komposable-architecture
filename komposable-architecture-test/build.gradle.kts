@@ -1,8 +1,8 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
 }
 
 //extra.apply {
@@ -19,18 +19,33 @@ plugins {
 //}
 
 kotlin {
-    androidTarget()
+    jvmToolchain(11)
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach {
-        it.binaries.framework {
-            baseName = "komposable-architecture-test"
-            isStatic = true
-        }
+    macosX64()
+    macosArm64()
+    iosArm64()
+    iosX64()
+    iosSimulatorArm64()
+
+    watchosArm32()
+    watchosArm64()
+    watchosX64()
+    watchosSimulatorArm64()
+    watchosDeviceArm64()
+
+    tvosArm64()
+    tvosX64()
+    tvosSimulatorArm64()
+    jvm()
+    js {
+        browser()
+        nodejs()
     }
+
+    linuxArm64()
+    linuxX64()
+    mingwX64()
+
 
     sourceSets {
         commonMain.dependencies {
@@ -40,18 +55,6 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.bundles.multiplatform.common.test)
         }
-    }
-}
-
-android {
-    namespace = "com.toggl.komposable_architecture_test"
-    compileSdk = 34
-    defaultConfig {
-        minSdk = 26
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 

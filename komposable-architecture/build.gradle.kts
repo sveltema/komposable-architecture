@@ -1,24 +1,38 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.ksp)
 }
 
 kotlin {
-    androidTarget()
+    jvmToolchain(11)
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach {
-        it.binaries.framework {
-            baseName = "komposable-architecture"
-            isStatic = true
-        }
+    macosX64()
+    macosArm64()
+    iosArm64()
+    iosX64()
+    iosSimulatorArm64()
+
+    watchosArm32()
+    watchosArm64()
+    watchosX64()
+    watchosSimulatorArm64()
+    watchosDeviceArm64()
+
+    tvosArm64()
+    tvosX64()
+    tvosSimulatorArm64()
+    jvm()
+    js {
+        browser()
+        nodejs()
     }
+
+    linuxArm64()
+    linuxX64()
+    mingwX64()
+
 
     sourceSets {
         commonMain.dependencies {
@@ -40,19 +54,6 @@ dependencies {
         .forEach {
             add(it.name, "io.mockative:mockative-processor:2.0.1")
         }
-}
-
-android {
-    namespace = "com.toggl.komposable"
-    compileSdk = 34
-    defaultConfig {
-        minSdk = 26
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
