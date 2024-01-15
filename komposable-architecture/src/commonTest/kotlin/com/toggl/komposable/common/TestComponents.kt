@@ -55,9 +55,9 @@ class TestExceptionEffect : Effect<TestAction> {
 
 class TestSubscription : Subscription<TestState, TestAction> {
     val stateFlow = MutableStateFlow<TestAction?>(null)
-    var invocations = 0
+    var invocationCount = 0
     override fun subscribe(state: Flow<TestState>): Flow<TestAction> {
-        invocations++
+        invocationCount++
         return stateFlow.asStateFlow().filterNotNull()
     }
 }
@@ -90,7 +90,9 @@ class TestReducer : FakeReducer<TestState, TestAction> {
     override fun reduce(state: TestState, action: TestAction): ReduceResult<TestState, TestAction> {
         invocations.add(state to action)
         return when (action) {
-            is TestAction.LocalActionWrapper -> ReduceResult(state, NoEffect)
+            is TestAction.LocalActionWrapper ->
+                ReduceResult(state, NoEffect)
+
             is TestAction.ChangeTestProperty ->
                 ReduceResult(state.copy(testProperty = action.testProperty), NoEffect)
 
@@ -103,10 +105,14 @@ class TestReducer : FakeReducer<TestState, TestAction> {
             is TestAction.StartEffectAction ->
                 ReduceResult(state, action.effect)
 
-            TestAction.DoNothingAction -> ReduceResult(state, NoEffect)
-            TestAction.DoNothingFromEffectAction -> ReduceResult(state, NoEffect)
-            TestAction.ThrowExceptionAction -> throw TestException
-            TestAction.StartExceptionThrowingEffectAction -> ReduceResult(state, TestExceptionEffect())
+            TestAction.DoNothingAction, TestAction.DoNothingFromEffectAction ->
+                ReduceResult(state, NoEffect)
+
+            TestAction.ThrowExceptionAction ->
+                throw TestException
+
+            TestAction.StartExceptionThrowingEffectAction ->
+                ReduceResult(state, TestExceptionEffect())
         }
     }
 }
@@ -131,10 +137,11 @@ class LocalTestReducer : FakeReducer<LocalTestState, LocalTestAction> {
             is LocalTestAction.ChangeTestIntProperty ->
                 ReduceResult(state.copy(testIntProperty = action.testIntProperty), NoEffect)
 
-            is LocalTestAction.StartEffectAction -> ReduceResult(state, action.effect)
-            LocalTestAction.DoNothingLocalAction,
-            LocalTestAction.DoNothingFromEffectAction,
-            -> ReduceResult(state, NoEffect)
+            is LocalTestAction.StartEffectAction ->
+                ReduceResult(state, action.effect)
+
+            LocalTestAction.DoNothingLocalAction, LocalTestAction.DoNothingFromEffectAction ->
+                ReduceResult(state, NoEffect)
         }
     }
 }

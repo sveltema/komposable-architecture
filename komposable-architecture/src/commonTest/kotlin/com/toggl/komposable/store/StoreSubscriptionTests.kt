@@ -11,7 +11,7 @@ class StoreSubscriptionTests : StoreCoroutineTest() {
 
     @Test
     fun `subscription's method subscribe is called on store creation`() = runTest {
-        assertTrue { testSubscription.invocations == 1 }
+        assertTrue { testSubscription.invocationCount == 1 }
     }
 
     @Test

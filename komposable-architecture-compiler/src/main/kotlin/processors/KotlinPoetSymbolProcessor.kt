@@ -17,16 +17,12 @@ abstract class KotlinPoetSymbolProcessor(
         for (fileGenerationResult in generateFiles(resolver)) {
             when (fileGenerationResult) {
                 is FileGenerationResult.Failure -> {
-                    logger.error(
-                        message = fileGenerationResult.compilerError,
-                        symbol = fileGenerationResult.node,
-                    )
+                    logger.error(message = fileGenerationResult.compilerError, symbol = fileGenerationResult.node)
                 }
-                is FileGenerationResult.Success ->
-                    fileGenerationResult.file.writeTo(
-                        codeGenerator = codeGenerator,
-                        dependencies = ALL_FILES,
-                    )
+
+                is FileGenerationResult.Success -> {
+                    fileGenerationResult.file.writeTo(codeGenerator = codeGenerator, dependencies = ALL_FILES)
+                }
             }
         }
 
